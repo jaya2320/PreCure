@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/forum_style.css' %}">
+  <link rel="stylesheet" href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <title>Open Forum</title>
+</head>
+<body>
+
+  {% if messages %}
+	{% for message in messages %}
+	 {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+	{% endfor %}
+
+{% endif %}
+
+<!-- **** Header Area Start **** -->
+<header class="header-area">
+  <!-- Top Header Area Start -->
+  
+  <!-- Top Header Area End -->
+
+  <!-- Main Header Start -->
+   <div class="main-header-area animated">
+      <div class="classy-nav-container breakpoint-off">
+          <div class="container">
+              <!-- Classy Menu -->
+              <nav class="classy-navbar justify-content-between" id="rehomesNav">
+
+                  <!-- Logo -->
+                  <a class="nav-brand" href="{% static './index.html' %}"><img src="{% static './img/core-img/precure.png' %}" alt=""></a>
+
+                  <!-- Navbar Toggler -->
+                  <div class="classy-navbar-toggler">
+                      <span class="navbarToggler"><span></span><span></span><span></span></span>
+                  </div>
+
+                  <!-- Menu -->
+                  <div class="classy-menu">
+                      <!-- Menu Close Button -->
+                      <div class="classycloseIcon">
+                          <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                      </div>
+                      <!-- Nav Start -->
+                      {% if user.is_authenticated %}
+                      <div class="classynav">
+                          <ul id="nav">
+                              <li class="active"><a href="/">Home</a></li>
+
+                             
+                              <li class="active"><a href="home">Detector</a></li>
+                              <li class="active"><a href="report">Report</a></li>
+                              
+                              
+                              </ul>
+                                      
+                             
+
+                          <!-- Contact btn -->
+                          <div class="contact-btn mt-3 mt-lg-0 ml-3 ml-lg-5">
+                              <a href="logout">Log Out</a>
+                          </div>
+                          <div class="contact-btn mt-3 mt-lg-0 ml-3 ml-lg-5">
+                              <p>Welcome "{{user.username}}"</p>
+                          </div>
+                      </div>
+
+                      {% else %}
+                      <div class="classynav">
+                          <ul id="nav">
+                              <li class="active"><a href="/">Home</a></li>
+
+                             
+                              
+                              
+                              <li class="active"><a href="enter">LogIn</a></li>
+                              <li class="active"><a href="register">SignUp</a></li>
+                              </ul>
+                                      
+                             
+
+                          <!-- Contact btn -->
+                          
+                      </div>
+                      {% endif %}
+                      <!-- Nav End -->
+                  </div>
+              </nav>
+          </div>
+      </div>
+  </div>
+</header>
+<!-- **** Header Area End **** -->
+
+<!----*** sidebar********-->
+
+<div class ="sidebar">
+  
+  <div class="container">
+    <form id="contactus" action="submit_forum" method="post">
+      {% csrf_token %}
+        <h3>Post Your Question</h3>
+        <fieldset> <input name="post_heading" placeholder="Heading" tabindex="1" required autofocus style="height:35px;font-size:14pt;"> </fieldset>
+        <fieldset><textarea name="post_content" placeholder="Add your Content ..." tabindex="2" style="height:100px;font-size:14pt;" ></textarea>  </fieldset>
+        <fieldset> <input type="file" name="post_image" placeholder="Add Image" accept="image/png, image/gif, image/jpeg" /> </fieldset>
+        
+        <fieldset> <button name="submit" type="submit" >Send</button> </fieldset>
+    </form>
+</div>
+</div>
+
+<!---*** sidebar end ***-->
+
+
+
+
+
+
+  <div class="main_container">
+  <div class="container-fluid mt-100">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="card-header pr-0 pl-0">
+                    <div class="row no-gutters align-items-center w-100">
+                        <div class="col font-weight-bold pl-3">Queries Asked</div>
+                        <div class="d-none d-md-block col-6 text-muted">
+                            <div class="row no-gutters align-items-center">
+                               
+                                
+                                <div class="col-6">Description</div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% for post in posts %}
+                
+                <hr class="m-0">
+                <div class="card-body py-3">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col"><a href="{% url 'forum_replies' post.id %}" value="{{post.id}}" class="text-big font-weight-semibold" data-abc="true">{{post.post_heading}} </a></div>
+                        
+                        <div class="d-none d-md-block col-8">
+                            <div class="row no-gutters align-items-center">
+                                
+                                
+                                <div class="media col-10 align-items-center"> 
+                                    <div class="media-body flex-truncate ml-2"> <a href="javascript:void(0)" class="d-block text-truncate" data-abc="true">{{post.post_content}}</a>
+                                        <div class="text-muted small text-truncate">{{post.timestamp}} <a href="javascript:void(0)" class="text-muted" data-abc="true">{{post.user.username}}</a></div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+               
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</html>

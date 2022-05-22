@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/forum_replies.css' %}">
+  <link rel="stylesheet" href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <title>Forum Reply</title>
+</head>
+<body>
+
+  {% if messages %}
+	{% for message in messages %}
+	 {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+	{% endfor %}
+
+{% endif %}
+
+<!-- **** Header Area Start **** -->
+<header class="header-area">
+  <!-- Top Header Area Start -->
+  
+  <!-- Top Header Area End -->
+
+  <!-- Main Header Start -->
+   <div class="main-header-area animated">
+      <div class="classy-nav-container breakpoint-off">
+          <div class="container">
+              <!-- Classy Menu -->
+              <nav class="classy-navbar justify-content-between" id="rehomesNav">
+
+                  <!-- Logo -->
+                  <a class="nav-brand" href="{% static './index.html' %}"><img src="{% static './img/core-img/precure.png' %}" alt=""></a>
+
+                  <!-- Navbar Toggler -->
+                  <div class="classy-navbar-toggler">
+                      <span class="navbarToggler"><span></span><span></span><span></span></span>
+                  </div>
+
+                  <!-- Menu -->
+                  <div class="classy-menu">
+                      <!-- Menu Close Button -->
+                      <div class="classycloseIcon">
+                          <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                      </div>
+                      <!-- Nav Start -->
+                      {% if user.is_authenticated %}
+                      <div class="classynav">
+                          <ul id="nav">
+                              <li class="active"><a href="/">Home</a></li>
+
+                             
+                              <li class="active"><a href="home">Detector</a></li>
+                              <li class="active"><a href="report">Report</a></li>
+                              
+                              <li class="active"><a href="forum">Forum</a></li>
+                              </ul>
+                                      
+                             
+
+                          <!-- Contact btn -->
+                          <div class="contact-btn mt-3 mt-lg-0 ml-3 ml-lg-5">
+                              <a href="logout">Log Out</a>
+                          </div>
+                          <div class="contact-btn mt-3 mt-lg-0 ml-3 ml-lg-5">
+                              <p>Welcome "{{user.username}}"</p>
+                          </div>
+                      </div>
+
+                      {% else %}
+                      <div class="classynav">
+                          <ul id="nav">
+                              <li class="active"><a href="/">Home</a></li>
+                              <li class="active"><a href="enter">LogIn</a></li>
+                              <li class="active"><a href="register">SignUp</a></li>
+                              </ul>
+                                      
+                             
+
+                          <!-- Contact btn -->
+                          
+                      </div>
+                      {% endif %}
+                      <!-- Nav End -->
+                  </div>
+              </nav>
+          </div>
+      </div>
+  </div>
+</header>
+<!-- **** Header Area End **** -->
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-center row">
+        <div class="d-flex flex-column col-md-60">
+            <div class="d-flex flex-row align-items-center text-left comment-top p-2 bg-white border-bottom px-4">
+                <div class="profile-image"><img class="rounded-circle" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" width="70"></div>
+                <div class="d-flex flex-column ml-3">
+                    <div class="d-flex flex-row post-title">
+                        <h5>{{post.post_heading}}</h5><span class="ml-2">{{post.user.username}}</span>
+                    </div>
+                    <div class="d-flex flex-row align-items-center align-content-center post-title"><span class="mr-2 comments">{{reply_count}} comments&nbsp;</span><span class="mr-2 dot"></span><span>{{post.timestamp}}</span></div>
+                </div>
+            </div>
+            <div class="d-flex flex-row align-items-center text-left comment-top p-2 bg-white border-bottom px-4">
+                <div class="col-md-12 ">
+                    <div class="border-top">
+                        <div class="row mt-3 ms-1">
+                            <div class=" col-lg-5 mb-lg-0 mb-2 ms-0 photo"> <img src="{{images}}" alt=""  class="w-100 h-100"> </div>
+                            <div class="col-lg-7 col-12 d-flex flex-column px-0">
+                                <div class="px-lg-2 pb-4 textmuted"> {{post.post_content}} </div>
+                                <div class="d-flex align-items-center justify-content-center ms-auto">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+            
+            <div class="coment-bottom bg-white p-2 px-4">
+                <form action="" method="post" id="reply" >
+                    {% csrf_token %}
+                    <div class="d-flex flex-row add-comment-section mt-4 mb-4">
+                        <img class="img-fluid img-responsive rounded-circle mr-2" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" width="38">
+                        <input type="text" name="post_reply" class="form-control mr-3" placeholder="Add comment" id="reply_content">
+                        <button class="btn btn-primary" type="submit">Reply</button>
+                    </div>
+                </form>
+                
+                {% for reply in replies %}
+                <div class="commented-section mt-2">
+                    <div class="d-flex flex-row align-items-center commented-user">
+                        <h5 class="mr-2">{{reply.username}}</h5><span class="dot mb-1"></span>
+                    </div>
+                    <div class="comment-text-sm"><span>{{reply.reply_content}}</span></div>
+                    <div class="reply-section">
+                        <div class="d-flex flex-row align-items-center voting-icons">
+                            <h6 class="ml-2 mt-1">{{reply.timestamp}}</h6>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+</body>
+
+  
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+</html>
